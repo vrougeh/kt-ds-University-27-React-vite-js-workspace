@@ -3,6 +3,10 @@
 // (parameter) => {function body} : fat arrow function
 // const abc = () => {};
 
+import TodoAppender from "./TodoAppender.jsx";
+import TodoHeader from "./TodoHeader.jsx";
+import TodoList from "./TodoList.jsx";
+
 // function과 fat arrow function의 기능적 차이
 // function = 함수를 호출한 대상을 this 객체로 알 수 있다.
 // fat arrow function = this 키워드 사용불가
@@ -11,8 +15,6 @@
 // export default 이후에 const 키워드가 나타날 수 없음
 // export default const > export const
 const TodoMain = () => {
-  const priorities = ["없음", "높음", "보통", "낮음"];
-
   //TODO JSON DATA
   const todoDatas = [
     {
@@ -52,34 +54,15 @@ const TodoMain = () => {
     <div className="wrapper">
       <header>React Todo</header>
       <ul className="tasks">
-        <li className="tasks-header">
-          <input type="checkbox" id="checkall" />
-          <label>Task</label>
-          <span className="due-date">Due date</span>
-          <span className="priority">Priority</span>
-        </li>
-        {todoDatas.map((todo, todoIdx) => (
-          <li key={todoIdx} className="task-item">
-            <input type="checkbox" id={todo.id} />
-            <label htmlFor={todo.id}>{todo.todo}</label>
-            <span className="due-date">{todo.dueDate}</span>
-            <span className="priority">{priorities[todo.priority]}</span>
-          </li>
-        ))}
+        <TodoHeader />
+        <TodoList todoDatas={todoDatas} />
       </ul>
-      <footer>
-        <input type="text" placeholder="Task" onKeyUp={onTaskKeyUpHandler} />
-        <input type="date" onChange={onDateChangeHandler} />
-        <select onChange={onPrioritySelectChangeHandler}>
-          <option>우선순위</option>
-          <option value="1">높음</option>
-          <option value="2">보통</option>
-          <option value="3">낮음</option>
-        </select>
-        <button type="button" onClick={onSaveButtonClickHandler}>
-          Save
-        </button>
-      </footer>
+      <TodoAppender
+        onTaskKeyUp={onTaskKeyUpHandler}
+        onDateChange={onDateChangeHandler}
+        onSaveButtonClick={onSaveButtonClickHandler}
+        onPrioritySelectChange={onPrioritySelectChangeHandler}
+      />
     </div>
   );
 };
