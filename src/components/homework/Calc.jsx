@@ -5,7 +5,6 @@ const Calc = () => {
   const [second, setSecond] = useState(0);
   const [result, setResult] = useState(0);
 
-  // 2. Handlers to update the result state
   const plusHandler = () => {
     setResult(Number(first) + Number(second));
   };
@@ -29,7 +28,6 @@ const Calc = () => {
 
   return (
     <div className="homework">
-      {/* 3. Link inputs to state using value and onChange */}
       <input
         type="number"
         value={first}
