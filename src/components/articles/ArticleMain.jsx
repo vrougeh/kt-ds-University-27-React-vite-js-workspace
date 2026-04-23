@@ -1,23 +1,22 @@
 //articles.json 파일 불러오기
-import ArticleHeader from "./ArticleHeader";
-import ArticleList from "./ArticleList";
 import articleData from "./articles.json";
-import ArticleWriter from "./ArticleWriter";
+import ArticleHeader from "./ArticleHeader.jsx";
+import ArticleList from "./ArticleList.jsx";
+import ArticleWriter from "./ArticleWriter.jsx";
 const ArticleMain = () => {
   console.log(articleData);
   return (
-    <div>
+    <div className="wrapper">
       <table>
         <thead>
           <ArticleHeader />
         </thead>
         <tbody>
-          <ArticleList />
+          <ArticleList articleData={articleData} />
         </tbody>
       </table>
       <div>
         <ArticleWriter />
-        게시글 작성 폼(제목, 이메일, 이름, 내용)
       </div>
     </div>
   );

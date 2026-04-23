@@ -1,11 +1,23 @@
-const TodoItem = ({ todo, priorities }) => {
-  const { id, todo: todoTask, dueDate, priority } = todo;
+const TodoItem = ({ todo, priorities, onDoneChange }) => {
+  const { id, todo: todoTask, dueDate, priority, isDone } = todo;
+  const doneClass = isDone ? "done" : "";
+
+  const onDoneChangeHandler = () => {
+    onDoneChange(id);
+  };
   return (
     <li className="task-item">
-      <input type="checkbox" id={id} />
-      <label htmlFor={id}>{todoTask}</label>
-      <span className="due-date">{dueDate}</span>
-      <span className="priority">{priorities[priority]}</span>
+      <input
+        type="checkbox"
+        id={id}
+        checked={isDone}
+        onChange={onDoneChangeHandler}
+      />
+      <label className={doneClass} htmlFor={id}>
+        {todoTask}
+      </label>
+      <span className={`due-date ${doneClass}`}>{dueDate}</span>
+      <span className={`priority ${doneClass}`}>{priorities[priority]}</span>
     </li>
   );
 };
