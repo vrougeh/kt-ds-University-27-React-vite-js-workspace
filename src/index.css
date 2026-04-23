@@ -238,13 +238,80 @@ button.confirm-cancel {
   }
 }
 
+/* 전체 컨테이너 레이아웃 */
 .homework {
   display: flex;
-  gap: 0.625rem;
+  align-items: center;
   justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  font-family: sans-serif;
 }
 
+.homework .countValue {
+  font-size: 3rem;
+  border: 1px solid #ccc;
+  width: 80px;
+  height: 80px;
+}
+
+/* 입력창 스타일 (Calc 전용) */
+.homework input[type="number"] {
+  width: 150px;
+  height: 150px;
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 3rem;
+  text-align: center;
+  outline: none;
+}
+
+.homework input:focus {
+  border-color: #007bff;
+}
+
+/* 연산 버튼 기둥 (Calc) */
 .homework > .column {
   display: flex;
   flex-direction: column;
+  gap: 5px;
+}
+
+/* 공통 버튼 스타일 */
+.homework button {
+  cursor: pointer;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 6px;
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.homework button:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+.homework button:active {
+  transform: translateY(1px); /* 클릭 시 눌리는 효과 */
+}
+
+/* 결과값 및 카운터 숫자 스타일 */
+.homework div:last-child,
+.homework div:nth-child(2) {
+  font-weight: bold;
+  color: #333;
+  min-width: 40px;
+  text-align: center;
+}
+
+.homework .result {
+  font-size: 3rem;
 }

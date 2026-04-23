@@ -16,7 +16,7 @@ const Counter = () => {
   return (
     <div className="homework">
       <button onClick={countDecreaseHandler}>-</button>
-      <div>{countValue}</div>
+      <div className="countValue">{countValue}</div>
       <button onClick={countEncreaseHandler}>+</button>
     </div>
   );
