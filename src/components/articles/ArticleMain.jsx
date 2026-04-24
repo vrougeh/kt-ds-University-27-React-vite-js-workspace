@@ -85,7 +85,6 @@ const ArticleMain = () => {
   const iswrite = !write && (
     <ArticleWriter
       inputData={{ subject, email, name, content }}
-      data={{ write }}
       onSubjectChange={onSubjectChangeHandler}
       onEmailChange={onEmailChangeHandler}
       onNameChange={onNameChangeHandler}
