@@ -3,7 +3,7 @@ const TodoItem = ({ todo, priorities, onDoneChange }) => {
   const doneClass = isDone ? "done" : "";
 
   const onDoneChangeHandler = () => {
-    onDoneChange(id);
+    onDoneChange(id, !isDone);
   };
   return (
     <li className="task-item">

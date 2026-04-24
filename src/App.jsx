@@ -5,13 +5,13 @@ import TodoMain from "./components/todo/TodoMain.jsx";
 
 export default function App() {
   // return <TodoMain />;
-  // return <ArticleMain />;
-  return (
-    <>
-      <Counter />
-      <Calc />
-    </>
-  );
+  return <ArticleMain />;
+  // return (
+  //   <>
+  //     <Counter />
+  //     <Calc />
+  //   </>
+  // );
 }
 
 //export default App;

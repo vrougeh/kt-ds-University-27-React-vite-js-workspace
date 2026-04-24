@@ -4,7 +4,6 @@
 // const abc = () => {};
 
 import { useState } from "react";
-import { StateTest } from "./StateTest.jsx";
 import TodoAppender from "./TodoAppender.jsx";
 import TodoHeader from "./TodoHeader.jsx";
 import TodoList from "./TodoList.jsx";
@@ -42,18 +41,38 @@ const TodoMain = () => {
     },
   ];
   const [cashedData, setCashedData] = useState(todoDatas);
+  console.log(cashedData);
+  const [{ todo, dueDate, priority }, setNewTodoData] = useState({
+    todo: "",
+    dueDate: "",
+    priority: 0,
+  });
+
+  const isAllDoneChangeHandler = (isDone) => {
+    setCashedData((prevData) => {
+      // cashedData 를 반복하면서 모든 isDone의 값을 변경한다.
+      // const newData = prevData.map((todo) => (todo.isDone = isDone));
+      const newData = prevData.map((todo) => ({ ...todo, isDone }));
+      // const newData = prevData.map((todo) => {
+      //   todo.isDone = isDone;
+      //   return todo;
+      // });
+      // 변경된 결과를 반환한다.
+      return newData;
+    });
+  };
 
   // 특정 dodo의 isDone 값을 반전시키는 함수
   // 이 함수를 TodoList에게 porps로 전달
   // TodoList는 TodoItem에게 함수를 props 전달
-  const onDoneChangeHandler = (todoId) => {
+  const onDoneChangeHandler = (todoId, isDone) => {
     setCashedData((prevData) => {
       const newStateMemory = [...prevData];
 
       // java for each 와 같은 동작
       for (const todo of newStateMemory) {
         if (todo.id === todoId) {
-          todo.isDone = true;
+          todo.isDone = isDone;
           break;
         }
       }
@@ -64,15 +83,32 @@ const TodoMain = () => {
 
   const onTaskKeyUpHandler = (event) => {
     console.log(event.target.value);
+    setNewTodoData((prevData) => ({
+      ...prevData,
+      todo: event.target.value,
+    }));
   };
   const onDateChangeHandler = (event) => {
     console.log(event.target.value);
+    setNewTodoData((prevData) => ({
+      ...prevData,
+      dueDate: event.target.value,
+    }));
   };
   const onSaveButtonClickHandler = () => {
     console.log("저장합니다.");
+    setCashedData((prevData) => [
+      ...prevData,
+      { id: prevData.length + 1, todo, dueDate, priority, isDone: false },
+    ]);
+    setNewTodoData({ todo: "", dueDate: "", priority: 0 });
   };
   const onPrioritySelectChangeHandler = (event) => {
     console.log(event.target.value);
+    setNewTodoData((prevData) => ({
+      ...prevData,
+      priority: parseInt(event.target.value),
+    }));
   };
   // 컴포넌트가 만들어 줄 HTML tag set를 반환
   return (
@@ -80,10 +116,11 @@ const TodoMain = () => {
       {/* <StateTest /> */}
       <header>React Todo</header>
       <ul className="tasks">
-        <TodoHeader />
+        <TodoHeader onAllDoneChange={isAllDoneChangeHandler} />
         <TodoList todoDatas={cashedData} onDoneChange={onDoneChangeHandler} />
       </ul>
       <TodoAppender
+        inputData={{ todo, dueDate, priority }}
         onTaskKeyUp={onTaskKeyUpHandler}
         onDateChange={onDateChangeHandler}
         onSaveButtonClick={onSaveButtonClickHandler}

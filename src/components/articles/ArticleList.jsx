@@ -1,8 +1,9 @@
 const ArticleList = ({ articleData }) => {
+  // console.dir(articleData);
   return (
     <>
-      {articleData.articles.map((data) => (
-        <tr>
+      {articleData.map((data) => (
+        <tr key={data.id}>
           <td className="id">{data.id}</td>
           <td className="subject">{data.subject}</td>
           {/* <td className="content">{data.content}</td> */}

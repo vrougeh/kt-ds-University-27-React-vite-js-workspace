@@ -2,10 +2,12 @@ import TodoItem, { TodoItemForChildren } from "./TodoItem.jsx";
 
 const TodoList = ({ todoDatas, onDoneChange }) => {
   const priorities = ["없음", "높음", "보통", "낮음"];
+  console.log(todoDatas);
   return (
     <>
       {todoDatas.map((todo) => (
         <TodoItem
+          key={todo.id}
           todo={todo}
           priorities={priorities}
           onDoneChange={onDoneChange}
