@@ -2,9 +2,11 @@ import { useState } from "react";
 
 const Counter = () => {
   const [countValue, setCountValue] = useState(0);
-  const countEncreaseHandler = () => {
+  const countIncreaseHandler = () => {
     if (countValue < 100) {
-      setCountValue(countValue + 1);
+      setCountValue((prevCount) => {
+        return prevCount + 1;
+      });
     }
   };
   const countDecreaseHandler = () => {
@@ -17,7 +19,7 @@ const Counter = () => {
     <div className="homework">
       <button onClick={countDecreaseHandler}>-</button>
       <div className="countValue">{countValue}</div>
-      <button onClick={countEncreaseHandler}>+</button>
+      <button onClick={countIncreaseHandler}>+</button>
     </div>
   );
 };

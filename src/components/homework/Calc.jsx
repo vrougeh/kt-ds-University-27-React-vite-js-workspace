@@ -6,7 +6,7 @@ const Calc = () => {
   const [result, setResult] = useState(0);
 
   const plusHandler = () => {
-    setResult(Number(first) + Number(second));
+    setResult(first + Number(second));
   };
 
   const minusHandler = () => {
@@ -18,6 +18,8 @@ const Calc = () => {
   };
 
   const divHandler = () => {
+    // second === 0 ? setResult("error") : setResult((first / second).toFixed(2));
+
     if (second !== 0) {
       const res = first / second;
       setResult(res.toFixed(2));
@@ -25,14 +27,13 @@ const Calc = () => {
       setResult("Error");
     }
   };
+  const firstHandler = (e) => {
+    setFirst(parseInt(e.target.value));
+  };
 
   return (
     <div className="homework">
-      <input
-        type="number"
-        value={first}
-        onChange={(e) => setFirst(e.target.value)}
-      />
+      <input type="number" value={first} onChange={firstHandler} />
 
       <div className="column">
         <button onClick={plusHandler}>+</button>
