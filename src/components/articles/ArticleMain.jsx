@@ -20,6 +20,8 @@ const ArticleMain = () => {
     content: "",
   });
 
+  const [write, setwrite] = useState(true);
+
   const onSubjectChangeHandler = (event) => {
     setNewArticle((prevData) => ({
       ...prevData,
@@ -62,10 +64,15 @@ const ArticleMain = () => {
         email,
       },
     ]);
+    setwrite(true);
     setNewArticle({ subject: "", email: "", name: "", content: "" });
   };
   const onCancelButtonClickHandler = () => {
+    setwrite(true);
     setNewArticle({ subject: "", email: "", name: "", content: "" });
+  };
+  const onWriteButtonClickHandler = () => {
+    setwrite(false);
   };
 
   return (
@@ -82,12 +89,14 @@ const ArticleMain = () => {
       <div>
         <ArticleWriter
           inputData={{ subject, email, name, content }}
+          data={{ write }}
           onSubjectChange={onSubjectChangeHandler}
           onEmailChange={onEmailChangeHandler}
           onNameChange={onNameChangeHandler}
           onContentChange={onContentChangeHandler}
           onSaveButtonClick={onSaveButtonClickHandler}
           onCancelButtonClick={onCancelButtonClickHandler}
+          onWriteButtonClick={onWriteButtonClickHandler}
         />
       </div>
     </div>
