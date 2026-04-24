@@ -75,6 +75,27 @@ const ArticleMain = () => {
     setwrite(false);
   };
 
+  const isnonwrite = write && (
+    <div>
+      <button type="button" onClick={onWriteButtonClickHandler}>
+        글쓰기
+      </button>
+    </div>
+  );
+  const iswrite = !write && (
+    <ArticleWriter
+      inputData={{ subject, email, name, content }}
+      data={{ write }}
+      onSubjectChange={onSubjectChangeHandler}
+      onEmailChange={onEmailChangeHandler}
+      onNameChange={onNameChangeHandler}
+      onContentChange={onContentChangeHandler}
+      onSaveButtonClick={onSaveButtonClickHandler}
+      onCancelButtonClick={onCancelButtonClickHandler}
+      onWriteButtonClick={onWriteButtonClickHandler}
+    />
+  );
+
   return (
     <div className="wrapper">
       <div>{cashedData.length}개의 게시글이 검색되었습니다.</div>
@@ -87,17 +108,8 @@ const ArticleMain = () => {
         </tbody>
       </table>
       <div>
-        <ArticleWriter
-          inputData={{ subject, email, name, content }}
-          data={{ write }}
-          onSubjectChange={onSubjectChangeHandler}
-          onEmailChange={onEmailChangeHandler}
-          onNameChange={onNameChangeHandler}
-          onContentChange={onContentChangeHandler}
-          onSaveButtonClick={onSaveButtonClickHandler}
-          onCancelButtonClick={onCancelButtonClickHandler}
-          onWriteButtonClick={onWriteButtonClickHandler}
-        />
+        {iswrite}
+        {isnonwrite}
       </div>
     </div>
   );
