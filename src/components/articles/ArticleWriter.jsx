@@ -6,8 +6,6 @@ const ArticleWriter = ({
   onContentChange,
   onSaveButtonClick,
   onCancelButtonClick,
-  onWriteButtonClick,
-  data: { write },
 }) => {
   return (
     <>
