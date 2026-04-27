@@ -41,7 +41,7 @@ const TodoMain = () => {
     },
   ];
   const [cashedData, setCashedData] = useState(todoDatas);
-  console.log(cashedData);
+  // console.log(cashedData);
 
   const isAllDoneChangeHandler = (isDone) => {
     setCashedData((prevData) => {

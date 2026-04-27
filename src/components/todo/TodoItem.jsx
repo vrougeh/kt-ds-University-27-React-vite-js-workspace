@@ -1,16 +1,43 @@
+import { useRef } from "react";
+import { Confirm } from "../ui/Modals";
+
 const TodoItem = ({ todo, priorities, onDoneChange }) => {
   const { id, todo: todoTask, dueDate, priority, isDone } = todo;
   const doneClass = isDone ? "done" : "";
+  const itemConfirmRef = useRef();
+  const checkboxRef = useRef();
 
   const onDoneChangeHandler = () => {
+    const checked = checkboxRef.current.checked;
+    let message = "";
+    if (checked) {
+      message = todoTask + "을/를 완료하시겠습니까";
+    } else {
+      message = todoTask + "을/를 미완료하시겠습니까";
+    }
+    itemConfirmRef.current.showConfirmModal(message);
+  };
+
+  const onConfirmOkClickHandler = () => {
     onDoneChange(id, !isDone);
   };
+  const onConfirmCloseClickHandler = () => {
+    // onDoneChange(id, isDone);
+    checkboxRef.current.checked = isDone;
+  };
+
   return (
     <li className="task-item">
+      <Confirm
+        dialogRef={itemConfirmRef}
+        onOkClick={onConfirmOkClickHandler}
+        onCloseClick={onConfirmCloseClickHandler}
+      />
       <input
         type="checkbox"
         id={id}
         checked={isDone}
+        ref={checkboxRef}
         onChange={onDoneChangeHandler}
       />
       <label className={doneClass} htmlFor={id}>
