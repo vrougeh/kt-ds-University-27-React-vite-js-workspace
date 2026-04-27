@@ -42,11 +42,6 @@ const TodoMain = () => {
   ];
   const [cashedData, setCashedData] = useState(todoDatas);
   console.log(cashedData);
-  const [{ todo, dueDate, priority }, setNewTodoData] = useState({
-    todo: "",
-    dueDate: "",
-    priority: 0,
-  });
 
   const isAllDoneChangeHandler = (isDone) => {
     setCashedData((prevData) => {
@@ -81,51 +76,23 @@ const TodoMain = () => {
     console.log(todoId, todoDatas);
   };
 
-  const onTaskKeyUpHandler = (event) => {
-    console.log(event.target.value);
-    setNewTodoData((prevData) => ({
-      ...prevData,
-      todo: event.target.value,
-    }));
-  };
-  const onDateChangeHandler = (event) => {
-    console.log(event.target.value);
-    setNewTodoData((prevData) => ({
-      ...prevData,
-      dueDate: event.target.value,
-    }));
-  };
-  const onSaveButtonClickHandler = () => {
+  const onSaveButtonClickHandler = (todo, dueDate, priority) => {
     console.log("저장합니다.");
     setCashedData((prevData) => [
       ...prevData,
       { id: prevData.length + 1, todo, dueDate, priority, isDone: false },
     ]);
-    setNewTodoData({ todo: "", dueDate: "", priority: 0 });
   };
-  const onPrioritySelectChangeHandler = (event) => {
-    console.log(event.target.value);
-    setNewTodoData((prevData) => ({
-      ...prevData,
-      priority: parseInt(event.target.value),
-    }));
-  };
+
   // 컴포넌트가 만들어 줄 HTML tag set를 반환
   return (
     <div className="wrapper">
-      {/* <StateTest /> */}
       <header>React Todo</header>
       <ul className="tasks">
         <TodoHeader onAllDoneChange={isAllDoneChangeHandler} />
         <TodoList todoDatas={cashedData} onDoneChange={onDoneChangeHandler} />
       </ul>
-      <TodoAppender
-        inputData={{ todo, dueDate, priority }}
-        onTaskKeyUp={onTaskKeyUpHandler}
-        onDateChange={onDateChangeHandler}
-        onSaveButtonClick={onSaveButtonClickHandler}
-        onPrioritySelectChange={onPrioritySelectChangeHandler}
-      />
+      <TodoAppender onSaveButtonClick={onSaveButtonClickHandler} />
     </div>
   );
 };

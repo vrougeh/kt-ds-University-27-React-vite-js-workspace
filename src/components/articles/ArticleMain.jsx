@@ -13,40 +13,9 @@ const ArticleMain = () => {
   const [cashedData, setCashedData] = useState(articleData.articles);
   // console.log(cashedData);
 
-  const [{ subject, email, name, content }, setNewArticle] = useState({
-    subject: "",
-    email: "",
-    name: "",
-    content: "",
-  });
-
   const [write, setwrite] = useState(true);
 
-  const onSubjectChangeHandler = (event) => {
-    setNewArticle((prevData) => ({
-      ...prevData,
-      subject: event.target.value,
-    }));
-  };
-  const onEmailChangeHandler = (event) => {
-    setNewArticle((prevData) => ({
-      ...prevData,
-      email: event.target.value,
-    }));
-  };
-  const onNameChangeHandler = (event) => {
-    setNewArticle((prevData) => ({
-      ...prevData,
-      name: event.target.value,
-    }));
-  };
-  const onContentChangeHandler = (event) => {
-    setNewArticle((prevData) => ({
-      ...prevData,
-      content: event.target.value,
-    }));
-  };
-  const onSaveButtonClickHandler = () => {
+  const onSaveButtonClickHandler = (subject, name, email, content) => {
     setCashedData((prevData) => [
       ...prevData,
       {
@@ -56,20 +25,20 @@ const ArticleMain = () => {
           "-" +
           String(prevData.length + 1).padStart(6, "0"),
         subject,
+        content,
         viewCnt: parseInt(Math.random() * 100),
         crtDt: formattedDateTime,
         membersVO: {
           name,
+          email,
         },
         email,
       },
     ]);
-    setwrite(true);
-    setNewArticle({ subject: "", email: "", name: "", content: "" });
+    // setwrite(true);
   };
   const onCancelButtonClickHandler = () => {
     setwrite(true);
-    setNewArticle({ subject: "", email: "", name: "", content: "" });
   };
   const onWriteButtonClickHandler = () => {
     setwrite(false);
@@ -84,14 +53,8 @@ const ArticleMain = () => {
   );
   const iswrite = !write && (
     <ArticleWriter
-      inputData={{ subject, email, name, content }}
-      onSubjectChange={onSubjectChangeHandler}
-      onEmailChange={onEmailChangeHandler}
-      onNameChange={onNameChangeHandler}
-      onContentChange={onContentChangeHandler}
       onSaveButtonClick={onSaveButtonClickHandler}
       onCancelButtonClick={onCancelButtonClickHandler}
-      onWriteButtonClick={onWriteButtonClickHandler}
     />
   );
 
