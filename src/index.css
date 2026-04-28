@@ -77,6 +77,23 @@ table > tbody > tr > td {
   background-color: #eee;
 }
 
+.wrapper > .tasks > .trand-header {
+  align-items: center;
+}
+.wrapper > .tasks > .trand-header > button {
+  width: 10rem;
+  height: 3rem;
+}
+
+.wrapper > .tasks > .flex-col {
+  display: flex;
+}
+.wrapper > .tasks > .flex-col > li > img {
+  max-width: 14rem;
+  max-height: 10rem;
+  margin-right: 1rem;
+}
+
 .wrapper > .tasks > li > input {
   display: inline-block;
   margin-right: 0.625rem;

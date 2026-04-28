@@ -1,11 +1,23 @@
-import { useRef } from "react";
+import { useRef, useContext } from "react";
 import { Confirm } from "../ui/Modals";
+import TodoContext from "./contexts/TodoContext.jsx";
 
-const TodoItem = ({ todo, priorities, onDoneChange }) => {
-  const { id, todo: todoTask, dueDate, priority, isDone } = todo;
-  const doneClass = isDone ? "done" : "";
+const TodoItem = ({ todo, onDoneChange }) => {
+  const priorities = ["없음", "높음", "보통", "낮음"];
+
   const itemConfirmRef = useRef();
   const checkboxRef = useRef();
+
+  const { componentName } = useContext(TodoContext);
+
+  console.log("TodoItem : ", componentName);
+
+  if (!componentName || componentName !== "TodoList") {
+    return <></>;
+  }
+
+  const { id, todo: todoTask, dueDate, priority, isDone } = todo;
+  const doneClass = isDone ? "done" : "";
 
   const onDoneChangeHandler = () => {
     const checked = checkboxRef.current.checked;
