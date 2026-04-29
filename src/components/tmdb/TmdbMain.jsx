@@ -8,7 +8,7 @@ import TrendItem from "./TrendItem.jsx";
 
 const TmdbMain = () => {
   const [{ sectionName, selectors, items }] = useState(trendData);
-  const [select, setSelect] = useState(selectors);
+  const [select, setSelect] = useState("today");
   //   console.log(selectors);
   //   console.log(items[select]);
 

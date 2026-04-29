@@ -1,6 +1,7 @@
 import TodoContext from "./contexts/TodoContext.jsx";
 
 const TodoGrid = ({ children }) => {
+  console.log("TodoGrid 시작");
   const providerProps = {
     componentName: "TodoGrid",
   };

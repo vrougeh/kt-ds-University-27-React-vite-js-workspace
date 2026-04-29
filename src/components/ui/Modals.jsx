@@ -2,6 +2,7 @@ import { useImperativeHandle, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 export const Alert = ({ dialogRef }) => {
+  console.log("Alert 시작");
   const alertModalRef = useRef();
   const [errorMessage, setErrorMessage] = useState();
 
@@ -38,6 +39,7 @@ export const Alert = ({ dialogRef }) => {
 };
 
 export const Confirm = ({ dialogRef, onOkClick, onCloseClick }) => {
+  console.log("Confirm 시작");
   const confirmModalRef = useRef();
   const [confirmMessage, setConfirmMessage] = useState();
 

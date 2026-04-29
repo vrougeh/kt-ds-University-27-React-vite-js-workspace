@@ -5,8 +5,8 @@ import TmdbMain from "./components/tmdb/TMDBMain.jsx";
 import TodoMain from "./components/todo/TodoMain.jsx";
 
 export default function App() {
-  return <TmdbMain />;
-  // return <TodoMain />;
+  // return <TmdbMain />;
+  return <TodoMain />;
   // return <ArticleMain />;
   // return (
   //   <>

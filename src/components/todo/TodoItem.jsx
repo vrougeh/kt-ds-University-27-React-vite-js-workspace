@@ -3,6 +3,7 @@ import { Confirm } from "../ui/Modals";
 import TodoContext from "./contexts/TodoContext.jsx";
 
 const TodoItem = ({ todo, onDoneChange }) => {
+  console.log("TodoItem 시작");
   const priorities = ["없음", "높음", "보통", "낮음"];
 
   const itemConfirmRef = useRef();
@@ -10,13 +11,13 @@ const TodoItem = ({ todo, onDoneChange }) => {
 
   const { componentName } = useContext(TodoContext);
 
-  console.log("TodoItem : ", componentName);
+  // console.log("TodoItem : ", componentName);
 
   if (!componentName || componentName !== "TodoList") {
     return <></>;
   }
 
-  const { id, todo: todoTask, dueDate, priority, isDone } = todo;
+  const { id, task: todoTask, dueDate, priority, done: isDone } = todo;
   const doneClass = isDone ? "done" : "";
 
   const onDoneChangeHandler = () => {
