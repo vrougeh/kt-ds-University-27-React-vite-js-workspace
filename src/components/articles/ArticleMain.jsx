@@ -1,10 +1,20 @@
-import { fetchArticleList } from "../../http/articles/fetchArticles.js";
+import {
+  fetchArticleList,
+  fetchJsonWebToken,
+} from "../../http/articles/fetchArticles.js";
 import ArticleHeader from "./ArticleHeader.jsx";
 import ArticleList from "./ArticleList.jsx";
 import ArticleWriter from "./ArticleWriter.jsx";
 import { useEffect, useState } from "react";
 const ArticleMain = () => {
   // console.log(articleData);
+
+  const [token, setToken] = useState();
+
+  const onLoginButtonClickHandler = async (email, password) => {
+    const loginToken = await fetchJsonWebToken(email, password);
+    setToken(loginToken);
+  };
 
   const [viewPageNo, setViewPageNo] = useState(0);
 
@@ -90,6 +100,21 @@ const ArticleMain = () => {
 
   return (
     <div className="wrapper">
+      {!token && (
+        <div>
+          <div>
+            <div>이메일</div>
+            <input type="text" id="email" />
+          </div>
+          <div>
+            <div>비밀번호</div>
+            <input type="password" id="password" />
+          </div>
+          <button type="button" onClick={onLoginButtonClickHandler}>
+            로그인
+          </button>
+        </div>
+      )}
       <div>{count}개의 게시글이 검색되었습니다.</div>
       <table>
         <thead>

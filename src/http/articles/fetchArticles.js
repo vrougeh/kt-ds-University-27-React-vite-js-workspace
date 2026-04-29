@@ -14,7 +14,21 @@ export const fetchArticleList = async (pageNo = 0, listSize = 10) => {
   }
 };
 
-export const fetchJsonWebToken = (id, password) => {};
+export const fetchJsonWebToken = async (email, password) => {
+  const loginResponse = await fetch(
+    "http://192.168.211.28:8080/api/authorization",
+    {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    },
+  );
+  const loginResult = await loginResponse.json();
+  return loginResult;
+};
 
 export const fetchAddArticle = async () => {
   const articleResponse = await fetch(
