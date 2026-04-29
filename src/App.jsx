@@ -6,8 +6,8 @@ import TodoMain from "./components/todo/TodoMain.jsx";
 
 export default function App() {
   // return <TmdbMain />;
-  return <TodoMain />;
-  // return <ArticleMain />;
+  // return <TodoMain />;
+  return <ArticleMain />;
   // return (
   //   <>
   //     <Counter />

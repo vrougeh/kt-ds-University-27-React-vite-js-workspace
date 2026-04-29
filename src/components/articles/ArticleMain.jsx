@@ -1,19 +1,49 @@
-//articles.json 파일 불러오기
-import articleData from "./articles.json";
+import { fetchArticleList } from "../../http/articles/fetchArticles.js";
 import ArticleHeader from "./ArticleHeader.jsx";
 import ArticleList from "./ArticleList.jsx";
 import ArticleWriter from "./ArticleWriter.jsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 const ArticleMain = () => {
   // console.log(articleData);
-  const now = new Date();
-  const formattedDate = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
-  const formattedDateTime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}:${String(now.getSeconds()).padStart(2, "0")}`;
 
-  const [cashedData, setCashedData] = useState(articleData.articles);
-  // console.log(cashedData);
+  const [viewPageNo, setViewPageNo] = useState(0);
+
+  const onPagenationButtonClickHandler = (nextPageNo) => {
+    setViewPageNo(nextPageNo);
+  };
+  const [
+    {
+      count,
+      result: articles,
+      pagenation: { pageNo = 0, pageCount = 1 },
+    },
+    setCashedData,
+  ] = useState({
+    count: 0,
+    result: [],
+    pagenation: {},
+  });
+  console.log(count, articles, pageNo, pageCount);
 
   const [write, setwrite] = useState(true);
+
+  const refreshArticleList = async () => {
+    const ArticleList = await fetchArticleList(viewPageNo);
+    const {
+      result: { count, result },
+      pagenation,
+    } = ArticleList;
+
+    if (!ArticleList.error) {
+      setCashedData({ count, result, pagenation });
+    } else {
+      alert(ArticleList.error);
+    }
+  };
+
+  useEffect(() => {
+    refreshArticleList();
+  }, [viewPageNo]);
 
   const onSaveButtonClickHandler = (subject, name, email, content) => {
     setCashedData((prevData) => [
@@ -21,13 +51,13 @@ const ArticleMain = () => {
       {
         id:
           "BO-" +
-          formattedDate +
+          "formattedDate" +
           "-" +
           String(prevData.length + 1).padStart(6, "0"),
         subject,
         content,
         viewCnt: parseInt(Math.random() * 100),
-        crtDt: formattedDateTime,
+        crtDt: "formattedDateTime",
         membersVO: {
           name,
           email,
@@ -60,15 +90,33 @@ const ArticleMain = () => {
 
   return (
     <div className="wrapper">
-      <div>{cashedData.length}개의 게시글이 검색되었습니다.</div>
+      <div>{count}개의 게시글이 검색되었습니다.</div>
       <table>
         <thead>
           <ArticleHeader />
         </thead>
         <tbody>
-          <ArticleList articleData={cashedData} />
+          <ArticleList articleData={articles} />
         </tbody>
       </table>
+      <div>
+        {pageNo > 0 && (
+          <button
+            type="button"
+            onClick={onPagenationButtonClickHandler.bind(this, pageNo - 1)}
+          >
+            이전
+          </button>
+        )}
+        {pageNo == 0 && pageCount - 1 > pageNo && (
+          <button
+            type="button"
+            onClick={onPagenationButtonClickHandler.bind(this, pageNo + 1)}
+          >
+            다음
+          </button>
+        )}
+      </div>
       <div>
         {iswrite}
         {isnonwrite}
