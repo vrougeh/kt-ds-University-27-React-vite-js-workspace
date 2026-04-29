@@ -5,15 +5,25 @@ import {
 import ArticleHeader from "./ArticleHeader.jsx";
 import ArticleList from "./ArticleList.jsx";
 import ArticleWriter from "./ArticleWriter.jsx";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 const ArticleMain = () => {
   // console.log(articleData);
 
   const [token, setToken] = useState();
 
-  const onLoginButtonClickHandler = async (email, password) => {
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+
+  const onLoginButtonClickHandler = async () => {
+    const email = emailRef.current.value;
+    const password = passwordRef.current.value;
     const loginToken = await fetchJsonWebToken(email, password);
-    setToken(loginToken);
+    console.log(loginToken);
+    if (!loginToken.error) {
+      setToken(loginToken);
+    } else {
+      alert(loginToken.error);
+    }
   };
 
   const [viewPageNo, setViewPageNo] = useState(0);
@@ -104,11 +114,11 @@ const ArticleMain = () => {
         <div>
           <div>
             <div>이메일</div>
-            <input type="text" id="email" />
+            <input type="text" id="email" ref={emailRef} />
           </div>
           <div>
             <div>비밀번호</div>
-            <input type="password" id="password" />
+            <input type="password" id="password" ref={passwordRef} />
           </div>
           <button type="button" onClick={onLoginButtonClickHandler}>
             로그인
