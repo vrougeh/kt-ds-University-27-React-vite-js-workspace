@@ -1,7 +1,10 @@
 import {
+  fetchAddArticle,
   fetchArticleList,
   fetchJsonWebToken,
 } from "../../http/articles/fetchArticles.js";
+import { getValidationResult } from "../../utils/errorHandler.js";
+import { isString } from "../../utils/type.js";
 import ArticleHeader from "./ArticleHeader.jsx";
 import ArticleList from "./ArticleList.jsx";
 import ArticleWriter from "./ArticleWriter.jsx";
@@ -10,6 +13,10 @@ const ArticleMain = () => {
   // console.log(articleData);
 
   const [token, setToken] = useState();
+  const [loginErrors, setLoginErrors] = useState();
+
+  //interrectiveHandle을 위한 ref
+  const writerRef = useRef();
 
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
@@ -20,9 +27,14 @@ const ArticleMain = () => {
     const loginToken = await fetchJsonWebToken(email, password);
     console.log(loginToken);
     if (!loginToken.error) {
-      setToken(loginToken);
+      setToken(loginToken.token);
     } else {
-      alert(loginToken.error);
+      if (isString(loginToken.error)) {
+        setLoginErrors(loginToken.error);
+      } else {
+        setLoginErrors(getValidationResult(loginToken.error));
+      }
+      // alert(loginToken.error);
     }
   };
 
@@ -65,26 +77,19 @@ const ArticleMain = () => {
     refreshArticleList();
   }, [viewPageNo]);
 
-  const onSaveButtonClickHandler = (subject, name, email, content) => {
-    setCashedData((prevData) => [
-      ...prevData,
-      {
-        id:
-          "BO-" +
-          "formattedDate" +
-          "-" +
-          String(prevData.length + 1).padStart(6, "0"),
-        subject,
-        content,
-        viewCnt: parseInt(Math.random() * 100),
-        crtDt: "formattedDateTime",
-        membersVO: {
-          name,
-          email,
-        },
-        email,
-      },
-    ]);
+  const onSaveButtonClickHandler = async (subject, content, attachFile) => {
+    const addResult = await fetchAddArticle(
+      token,
+      subject,
+      content,
+      attachFile,
+    );
+    if (addResult.error) {
+      writerRef.current.setResponseError(addResult.error);
+    } else {
+      refreshArticleList();
+    }
+
     // setwrite(true);
   };
   const onCancelButtonClickHandler = () => {
@@ -94,31 +99,20 @@ const ArticleMain = () => {
     setwrite(false);
   };
 
-  const isnonwrite = write && (
-    <div>
-      <button type="button" onClick={onWriteButtonClickHandler}>
-        글쓰기
-      </button>
-    </div>
-  );
-  const iswrite = !write && (
-    <ArticleWriter
-      onSaveButtonClick={onSaveButtonClickHandler}
-      onCancelButtonClick={onCancelButtonClickHandler}
-    />
-  );
-
   return (
     <div className="wrapper">
       {!token && (
         <div>
+          {isString(loginErrors) && <div>{loginErrors}</div>}
           <div>
-            <div>이메일</div>
+            <label htmlFor="email">이메일</label>
             <input type="text" id="email" ref={emailRef} />
+            {loginErrors?.email && <div>{loginErrors.email}</div>}
           </div>
           <div>
-            <div>비밀번호</div>
+            <label htmlFor="password">비밀번호</label>
             <input type="password" id="password" ref={passwordRef} />
+            {loginErrors?.password && <div>{loginErrors.password}</div>}
           </div>
           <button type="button" onClick={onLoginButtonClickHandler}>
             로그인
@@ -153,8 +147,19 @@ const ArticleMain = () => {
         )}
       </div>
       <div>
-        {iswrite}
-        {isnonwrite}
+        {write ? (
+          <div>
+            <button type="button" onClick={onWriteButtonClickHandler}>
+              글쓰기
+            </button>
+          </div>
+        ) : (
+          <ArticleWriter
+            errorHandleRef={writerRef}
+            onSaveButtonClick={onSaveButtonClickHandler}
+            onCancelButtonClick={onCancelButtonClickHandler}
+          />
+        )}
       </div>
     </div>
   );

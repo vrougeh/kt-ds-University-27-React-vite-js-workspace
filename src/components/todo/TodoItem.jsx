@@ -1,8 +1,10 @@
 import { useRef, useContext } from "react";
 import { Confirm } from "../ui/Modals";
 import TodoContext from "./contexts/TodoContext.jsx";
+import { fetchDoneTodo, fetchTodoList } from "../../http/todo/fetchTodo.js";
+import { useDispatch } from "react-redux";
 
-const TodoItem = ({ todo, onDoneChange }) => {
+const TodoItem = ({ todo }) => {
   console.log("TodoItem 시작");
   const priorities = ["없음", "높음", "보통", "낮음"];
 
@@ -10,6 +12,8 @@ const TodoItem = ({ todo, onDoneChange }) => {
   const checkboxRef = useRef();
 
   const { componentName } = useContext(TodoContext);
+
+  const reactReduxDispatcher = useDispatch();
 
   // console.log("TodoItem : ", componentName);
 
@@ -31,11 +35,17 @@ const TodoItem = ({ todo, onDoneChange }) => {
     itemConfirmRef.current.showConfirmModal(message);
   };
 
-  const onConfirmOkClickHandler = () => {
-    onDoneChange(id, !isDone);
+  const onConfirmOkClickHandler = async () => {
+    reactReduxDispatcher({ type: "todo-done-item", payload: id });
+
+    const doneResult = await fetchDoneTodo(id);
+    if (doneResult.errors) {
+      alert(doneResult.errors);
+    }
+    const fetchResult = await fetchTodoList();
+    reactReduxDispatcher({ type: "todo-refresh", payload: fetchResult.body });
   };
   const onConfirmCloseClickHandler = () => {
-    // onDoneChange(id, isDone);
     checkboxRef.current.checked = isDone;
   };
 

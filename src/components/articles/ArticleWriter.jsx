@@ -1,11 +1,30 @@
-import { useRef } from "react";
+import { useImperativeHandle, useRef, useState } from "react";
 import { Alert } from "../ui/Modals";
+import { isString } from "../../utils/type";
+import { getValidationResult } from "../../utils/errorHandler";
 
-const ArticleWriter = ({ onSaveButtonClick, onCancelButtonClick }) => {
+const ArticleWriter = ({
+  errorHandleRef,
+  onSaveButtonClick,
+  onCancelButtonClick,
+}) => {
+  const [addError, setAddError] = useState();
+
+  useImperativeHandle(errorHandleRef, () => {
+    return {
+      setResponseError(fetchError) {
+        if (isString(fetchError)) {
+          setAddError(fetchError);
+        } else {
+          setAddError(getValidationResult(fetchError));
+        }
+      },
+    };
+  });
+
   const subjectRef = useRef();
-  const emailRef = useRef();
-  const nameRef = useRef();
   const contentRef = useRef();
+  const attachFileRef = useRef();
 
   const alertRef = useRef();
 
@@ -16,48 +35,35 @@ const ArticleWriter = ({ onSaveButtonClick, onCancelButtonClick }) => {
       alertRef.current.showModal("제목을 입력해주세요");
       return;
     }
-    if (!emailRef.current.value) {
-      alertRef.current.showModal("이메일을 입력해주세요");
-      return;
-    }
-    if (!nameRef.current.value) {
-      alertRef.current.showModal("이름을 입력해주세요");
-      return;
-    }
     if (!contentRef.current.value) {
       alertRef.current.showModal("내용을 입력해주세요");
       return;
     }
     onSaveButtonClick(
       subjectRef.current.value,
-      emailRef.current.value,
-      nameRef.current.value,
       contentRef.current.value,
+      attachFileRef.current.files,
     );
     subjectRef.current.value = "";
-    emailRef.current.value = "";
-    nameRef.current.value = "";
     contentRef.current.value = "";
+    attachFileRef.current.value = "";
   };
 
   return (
     <>
       <Alert dialogRef={alertRef} />
+      {isString(addError) && <div>{addError}</div>}
       <div>
         <div>제목</div>
         <input type="text" id="subject" ref={subjectRef} />
       </div>
       <div>
-        <div>이메일</div>
-        <input type="text" id="email" ref={emailRef} />
-      </div>
-      <div>
-        <div>이름</div>
-        <input type="text" id="name" ref={nameRef} />
-      </div>
-      <div>
         <div>내용</div>
         <textarea type="text" id="content" ref={contentRef} />
+      </div>
+      <div>
+        <div>첨부파일</div>
+        <input type="file" id="file" ref={attachFileRef} multiple />
       </div>
       <div>
         <button type="button" onClick={onSaveButtonClickHandler}>

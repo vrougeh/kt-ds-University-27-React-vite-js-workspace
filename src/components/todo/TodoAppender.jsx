@@ -1,8 +1,12 @@
-import { memo, useRef } from "react";
+import { memo, useRef, useState } from "react";
 import { Alert } from "../ui/Modals";
+import { fetchAddTodo, fetchTodoList } from "../../http/todo/fetchTodo";
+import { useDispatch } from "react-redux";
 
-const TodoAppender = memo(({ onSaveButtonClick }) => {
+const TodoAppender = memo(() => {
   console.log("TodoAppender 시작");
+
+  const [isFetching, setIsFetching] = useState(false);
 
   //Component Rendering을 Delay
   // for (let i = 1; i < 100_000; i++) {
@@ -13,7 +17,9 @@ const TodoAppender = memo(({ onSaveButtonClick }) => {
   const dateRef = useRef();
   const priorityRef = useRef();
   const alertRef = useRef();
-  const onSaveButtonClickHandler = () => {
+  const reactReduxDispatcher = useDispatch();
+
+  const onSaveButtonClickHandler = async () => {
     if (!todoRef.current.value) {
       alertRef.current.showModal("할일을 적어주세요");
       return;
@@ -26,11 +32,20 @@ const TodoAppender = memo(({ onSaveButtonClick }) => {
       alertRef.current.showModal("우선순위를 적어주세요");
       return;
     }
-    onSaveButtonClick(
+    setIsFetching(true);
+    const addResult = await fetchAddTodo(
       todoRef.current.value,
       dateRef.current.value,
       priorityRef.current.value,
     );
+    setIsFetching(false);
+    if (addResult.errors) {
+      alert(addResult.errors);
+    }
+    const fetchResult = await fetchTodoList();
+
+    reactReduxDispatcher({ type: "todo-refresh", payload: fetchResult.body });
+
     todoRef.current.value = "";
     dateRef.current.value = "";
     priorityRef.current.value = "";
@@ -47,8 +62,12 @@ const TodoAppender = memo(({ onSaveButtonClick }) => {
         <option value="2">보통</option>
         <option value="3">낮음</option>
       </select>
-      <button type="button" onClick={onSaveButtonClickHandler}>
-        Save
+      <button
+        type="button"
+        disabled={isFetching}
+        onClick={onSaveButtonClickHandler}
+      >
+        {isFetching ? "저장중.." : "저장"}
       </button>
     </footer>
   );
