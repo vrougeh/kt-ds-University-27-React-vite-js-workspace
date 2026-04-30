@@ -12,6 +12,7 @@ import TodoGrid from "./TodoGrid.jsx";
 import AddCalculator from "./AddCalculator.jsx";
 import { fetchTodoList } from "../../http/todo/fetchTodo.js";
 import { useDispatch, useSelector } from "react-redux";
+import { todoAction } from "../../stores/toolkit/slices/todoSlice.js";
 
 // function과 fat arrow function의 기능적 차이
 // function = 함수를 호출한 대상을 this 객체로 알 수 있다.
@@ -27,15 +28,16 @@ const TodoMain = () => {
   // const [cashedData, setCashedData] = useState([]);
   // console.log(cashedData);
   // ReactRedux Store에서 todo state를 가져온다.
-  const todoList = useSelector((store) => store.todo);
+  const { list: todoList } = useSelector((store) => store.todo);
+  console.log(todoList);
   const storeDispatcher = useDispatch();
 
   const refreshTodoList = async () => {
-    const fetchReslt = await fetchTodoList();
+    const fetchResult = await fetchTodoList();
     //setCashedData(fetchReslt.body);
-    storeDispatcher({ type: "todo-refresh", payload: fetchReslt.body });
-    if (fetchReslt.errors) {
-      alert(fetchReslt.errors);
+    storeDispatcher(todoAction.refresh(fetchResult.body));
+    if (fetchResult.errors) {
+      alert(fetchResult.errors);
     }
   };
 

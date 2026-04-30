@@ -3,6 +3,7 @@ import { Confirm } from "../ui/Modals";
 import TodoContext from "./contexts/TodoContext.jsx";
 import { fetchDoneTodo, fetchTodoList } from "../../http/todo/fetchTodo.js";
 import { useDispatch } from "react-redux";
+import { todoAction } from "../../stores/toolkit/slices/todoSlice.js";
 
 const TodoItem = ({ todo }) => {
   console.log("TodoItem 시작");
@@ -36,14 +37,14 @@ const TodoItem = ({ todo }) => {
   };
 
   const onConfirmOkClickHandler = async () => {
-    reactReduxDispatcher({ type: "todo-done-item", payload: id });
+    reactReduxDispatcher(todoAction.doneItem(id));
 
     const doneResult = await fetchDoneTodo(id);
     if (doneResult.errors) {
       alert(doneResult.errors);
     }
     const fetchResult = await fetchTodoList();
-    reactReduxDispatcher({ type: "todo-refresh", payload: fetchResult.body });
+    reactReduxDispatcher(todoAction.refresh(fetchResult.body));
   };
   const onConfirmCloseClickHandler = () => {
     checkboxRef.current.checked = isDone;

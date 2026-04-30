@@ -4,13 +4,14 @@ import Counter from "./components/homework/Counter.jsx";
 import TmdbMain from "./components/tmdb/TMDBMain.jsx";
 import TodoMain from "./components/todo/TodoMain.jsx";
 import { ReactReduxProvider } from "./stores/redux/ReactReduxProvider.jsx";
+import { ToolkitProvider } from "./stores/toolkit/ToolkitProvider.jsx";
 
 export default function App() {
   // return <TmdbMain />;
   return (
-    <ReactReduxProvider>
+    <ToolkitProvider>
       <TodoMain />
-    </ReactReduxProvider>
+    </ToolkitProvider>
   );
   // return (
   //   <ReactReduxProvider>

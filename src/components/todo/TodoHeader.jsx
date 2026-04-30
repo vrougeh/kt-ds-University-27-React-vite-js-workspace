@@ -4,6 +4,7 @@ import { useContext } from "react";
 import TodoContext from "./contexts/TodoContext.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllDoneTodo, fetchTodoList } from "../../http/todo/fetchTodo.js";
+import { todoAction } from "../../stores/toolkit/slices/todoSlice.js";
 
 const TodoHeader = () => {
   console.log("TodoHeader 시작");
@@ -11,7 +12,7 @@ const TodoHeader = () => {
   const confirmRef = useRef();
 
   // react-redux store > todo 가져오기
-  const todoList = useSelector((store) => store.todo);
+  const { list: todoList } = useSelector((store) => store.todo);
   const count = {
     all: todoList.length,
     // 완료된 개수만 반환
@@ -52,7 +53,7 @@ const TodoHeader = () => {
       alert(allDoneResult.errors);
     }
     const fetchResult = await fetchTodoList();
-    reactReduxDispatcher({ type: "todo-refresh", payload: fetchResult.body });
+    reactReduxDispatcher(todoAction.refresh(fetchResult.body));
   };
   const onConfirmCloseClickHandler = () => {
     checkboxRef.current.checked = !checkboxRef.current.checked;
