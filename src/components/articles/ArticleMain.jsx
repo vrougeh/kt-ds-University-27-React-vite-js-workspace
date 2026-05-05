@@ -1,3 +1,4 @@
+import { useDispatch, useSelector } from "react-redux";
 import {
   fetchAddArticle,
   fetchArticleList,
@@ -9,8 +10,16 @@ import ArticleHeader from "./ArticleHeader.jsx";
 import ArticleList from "./ArticleList.jsx";
 import ArticleWriter from "./ArticleWriter.jsx";
 import { useEffect, useRef, useState } from "react";
+import { articleAction } from "../../stores/toolkit/slices/articleSlice.js";
 const ArticleMain = () => {
   // console.log(articleData);
+  const {
+    list: articles,
+    count,
+    pagenation,
+  } = useSelector((store) => store.article);
+
+  const storeDispatcher = useDispatch();
 
   const [token, setToken] = useState();
   const [loginErrors, setLoginErrors] = useState();
@@ -24,7 +33,9 @@ const ArticleMain = () => {
   const onLoginButtonClickHandler = async () => {
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
+
     const loginToken = await fetchJsonWebToken(email, password);
+
     console.log(loginToken);
     if (!loginToken.error) {
       setToken(loginToken.token);
@@ -43,33 +54,24 @@ const ArticleMain = () => {
   const onPagenationButtonClickHandler = (nextPageNo) => {
     setViewPageNo(nextPageNo);
   };
-  const [
-    {
-      count,
-      result: articles,
-      pagenation: { pageNo = 0, pageCount = 1 },
-    },
-    setCashedData,
-  ] = useState({
-    count: 0,
-    result: [],
-    pagenation: {},
-  });
-  console.log(count, articles, pageNo, pageCount);
 
   const [write, setwrite] = useState(true);
 
   const refreshArticleList = async () => {
-    const ArticleList = await fetchArticleList(viewPageNo);
-    const {
-      result: { count, result },
-      pagenation,
-    } = ArticleList;
+    const response = await fetchArticleList(viewPageNo);
 
-    if (!ArticleList.error) {
-      setCashedData({ count, result, pagenation });
+    if (!response.error) {
+      const {
+        result: { count, result },
+        pagenation,
+      } = response;
+
+      // 로컬 useState 대신 Redux Store에 저장
+      storeDispatcher(
+        articleAction.setArticleList({ count, result, pagenation }),
+      );
     } else {
-      alert(ArticleList.error);
+      alert(response.error);
     }
   };
 

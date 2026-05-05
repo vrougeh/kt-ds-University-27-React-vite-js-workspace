@@ -9,18 +9,17 @@ import { ToolkitProvider } from "./stores/toolkit/ToolkitProvider.jsx";
 export default function App() {
   // return <TmdbMain />;
   return (
+    // <ToolkitProvider>
+    //   <TodoMain />
+    // </ToolkitProvider>
+    // );
+    // return (
     <ToolkitProvider>
-      <TodoMain />
+      <ArticleMain />
     </ToolkitProvider>
+    // );
+    // return (
   );
-  // return (
-  //   <ReactReduxProvider>
-  //     <ArticleMain />
-  //   </ReactReduxProvider>
-  // );
-  // return (
-
-  // );
 }
 
 //export default App;
