@@ -5,13 +5,11 @@ import ArticleWriter from "./ArticleWriter.jsx";
 import Login from "../user/Login.jsx";
 import ArticleTable from "./ArticleTable.jsx";
 const ArticleMain = () => {
-  // console.log(articleData);
-  // setwrite(true);
   const { count } = useSelector((store) => store.article);
 
   return (
     <div className="wrapper">
-      <Login />
+      {/* <Login /> */}
       <div>{count}개의 게시글이 검색되었습니다.</div>
       <ArticleTable>
         <ArticleHeader />

@@ -2,17 +2,14 @@ import { useRef, useState } from "react";
 import { Alert } from "../ui/Modals";
 import { isString } from "../../utils/type";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchAddArticle,
-  fetchArticleList,
-} from "../../http/articles/fetchArticles";
-import { getValidationResult } from "../../utils/errorHandler";
-import { articleAction } from "../../stores/toolkit/slices/articleSlice";
+import { articleThunks } from "../../stores/toolkit/slices/articleSlice";
 
 const ArticleWriter = () => {
-  const [addError, setAddError] = useState();
   const [viewMode, setViewMode] = useState("button");
   const { token } = useSelector((store) => store.user);
+  const {
+    error: { write: addError },
+  } = useSelector((store) => store.article);
 
   const toolkitDispatcher = useDispatch();
 
@@ -28,7 +25,6 @@ const ArticleWriter = () => {
 
   // 저장을 클릭하면 입력했던 값을 가져와 출력한다.
   const onSaveButtonClickHandler = async () => {
-    console.log(alertRef);
     if (!subjectRef.current.value) {
       alertRef.current.showModal("제목을 입력해주세요");
       return;
@@ -37,27 +33,14 @@ const ArticleWriter = () => {
       alertRef.current.showModal("내용을 입력해주세요");
       return;
     }
-    const addResult = await fetchAddArticle(
-      token,
-      subjectRef.current.value,
-      contentRef.current.value,
-      attachFileRef.current.files,
+
+    toolkitDispatcher(
+      articleThunks.write(
+        subjectRef.current.value,
+        contentRef.current.value,
+        attachFileRef.current.files,
+      ),
     );
-
-    if (addResult.error) {
-      if (isString(addResult.error)) {
-        setAddError(addResult.error);
-      } else {
-        setAddError(getValidationResult(addResult.error));
-      }
-    }
-
-    const fetchResult = await fetchArticleList();
-    const {
-      result: { count, result },
-      pagination,
-    } = fetchResult;
-    toolkitDispatcher(articleAction.refresh({ count, result, pagination }));
     subjectRef.current.value = "";
     contentRef.current.value = "";
     attachFileRef.current.value = "";

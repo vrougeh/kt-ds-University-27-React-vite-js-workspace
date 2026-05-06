@@ -1,36 +1,40 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { userAction } from "../../stores/toolkit/slices/userSlice";
+import { userAction, userThunks } from "../../stores/toolkit/slices/userSlice";
 import { isString } from "../../utils/type";
-import { getValidationResult } from "../../utils/errorHandler";
-import { fetchJsonWebToken } from "../../http/articles/fetchArticles";
 
 const Login = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
 
-  const { token } = useSelector((store) => store.user);
+  const {
+    token,
+    info,
+    error: loginErrors,
+  } = useSelector((store) => store.user);
   const toolkitProvider = useDispatch();
-  const [loginErrors, setLoginErrors] = useState();
+
+  useEffect(() => {
+    toolkitProvider(userAction.autoLogin());
+    toolkitProvider(userThunks.loadMyInfo());
+  }, [token]);
 
   if (token) {
-    return <></>;
+    const onLogoutButtonClickHandler = () => {
+      toolkitProvider(userThunks.logout());
+    };
+    return (
+      <div>
+        {info?.name}({info?.email})
+        <button onClick={onLogoutButtonClickHandler}>Logout</button>
+      </div>
+    );
   }
 
-  const onLoginButtonClickHandler = async () => {
-    const loginResult = await fetchJsonWebToken(
-      emailRef.current.value,
-      passwordRef.current.value,
+  const onLoginButtonClickHandler = () => {
+    toolkitProvider(
+      userThunks.login(emailRef.current.value, passwordRef.current.value),
     );
-    toolkitProvider(userAction.login(loginResult.token));
-
-    if (loginResult.error) {
-      if (isString(loginResult.error)) {
-        setLoginErrors(loginResult.error);
-      } else {
-        setLoginErrors(getValidationResult(loginResult.error));
-      }
-    }
   };
 
   return (

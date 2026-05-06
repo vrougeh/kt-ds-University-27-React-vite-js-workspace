@@ -1,4 +1,5 @@
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const ArticleList = () => {
   // console.dir(articleData);
@@ -8,7 +9,9 @@ const ArticleList = () => {
       {articleData.map((data) => (
         <tr key={data.id}>
           <td className="id">{data.id}</td>
-          <td className="subject">{data.subject}</td>
+          <td className="subject">
+            <Link to={`/article/${data.id}`}>{data.subject}</Link>
+          </td>
           {/* <td className="content">{data.content}</td> */}
           {/* <td className="email">{data.email}</td> */}
           <td className="viewCnt">{data.viewCnt}</td>
