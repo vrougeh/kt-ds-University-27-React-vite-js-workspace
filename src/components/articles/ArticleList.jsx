@@ -1,7 +1,10 @@
-const ArticleList = ({ articleData }) => {
+import { useSelector } from "react-redux";
+
+const ArticleList = () => {
   // console.dir(articleData);
+  const { list: articleData } = useSelector((store) => store.article);
   return (
-    <>
+    <tbody>
       {articleData.map((data) => (
         <tr key={data.id}>
           <td className="id">{data.id}</td>
@@ -16,7 +19,7 @@ const ArticleList = ({ articleData }) => {
           </td>
         </tr>
       ))}
-    </>
+    </tbody>
   );
 };
 export default ArticleList;

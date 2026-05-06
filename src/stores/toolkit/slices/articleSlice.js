@@ -6,15 +6,15 @@ export const articleSlice = createSlice({
   initialState: {
     list: [],
     count: 0,
-    pagenation: {},
+    pagination: { pageNo: 0, pageCount: 0 },
   },
   reducers: {
-    setArticleList: (state, action) => {
-      const { count, result, pagenation } = action.payload;
-      state.list = result;
-      state.count = count;
-      state.pagenation = pagenation;
+    refresh(store, action) {
+      store.list = action.payload.result;
+      store.pagination = action.payload.pagination;
+      store.count = action.payload.count;
     },
   },
 });
 export const articleAction = articleSlice.actions;
+console.log(articleAction);
